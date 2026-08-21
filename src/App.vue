@@ -1,57 +1,59 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
+import { useRoute } from 'vue-router'
+import CompassLogo from './components/CompassLogo.vue'
+
+const route = useRoute()
 </script>
 
 <template>
-  <header class="navbar">
-    <div class="brand">
-      <span class="brand-text">LdcuNav</span>
-    </div>
-  </header>
+  <div class="app-layout">
+    <!-- Persistent Top Navigation Bar -->
+    <header class="app-navbar">
+      <router-link to="/" class="nav-brand" aria-label="LdcuNav Home">
+        <CompassLogo :size="32" :glow="false" :animated="false" />
+        <span class="brand-text">
+          <span class="brand-accent">Ldcu</span>Nav
+        </span>
+      </router-link>
 
-  <main class="main-container">
-    <div class="content-wrapper">
-      <router-view />
-    </div>
-  </main>
+      <div class="campus-badge">
+        <span class="campus-dot"></span>
+        <span>Main Campus</span>
+      </div>
+
+      <nav class="nav-links-right">
+        <router-link
+          to="/"
+          class="nav-pill-link"
+          :class="{ active: route.name === 'login' }"
+        >
+          Sign In
+        </router-link>
+        <router-link
+          to="/register"
+          class="nav-pill-link"
+          :class="{ active: route.name === 'register' }"
+        >
+          Register
+        </router-link>
+      </nav>
+    </header>
+
+    <!-- Main Content Container with Router View -->
+    <main class="auth-container">
+      <router-view v-slot="{ Component }">
+        <transition name="fade" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </router-view>
+    </main>
+  </div>
 </template>
 
 <style scoped>
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  padding: 1.5rem 2rem;
-  z-index: 100;
+.app-layout {
+  min-height: 100vh;
   display: flex;
-  align-items: center;
-}
-
-.brand-text {
-  font-family: 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-weight: 700;
-  font-size: 1.5rem;
-  letter-spacing: 0.08em;
-  color: #000000;
-  user-select: none;
-}
-
-.main-container {
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-  width: 100%;
-}
-
-.content-wrapper {
-  width: 100%;
-  max-width: 1200px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
 }
 </style>
-

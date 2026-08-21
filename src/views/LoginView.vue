@@ -1,231 +1,170 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import CompassLogo from '@/components/CompassLogo.vue'
+import { Mail, Lock, Eye, EyeOff, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-vue-next'
 
 const email = ref<string>('')
 const password = ref<string>('')
+const rememberMe = ref<boolean>(true)
+const showPassword = ref<boolean>(false)
+const isLoading = ref<boolean>(false)
+const message = ref<{ type: 'success' | 'error'; text: string } | null>(null)
 
 function handleSubmit() {
-  // TODO: wire up to auth API
-  console.log('Login attempted with:', email.value)
+  if (!email.value || !password.value) {
+    message.value = {
+      type: 'error',
+      text: 'Please provide both your Liceo email and password.',
+    }
+    return
+  }
+
+  isLoading.value = true
+  message.value = null
+
+  setTimeout(() => {
+    isLoading.value = false
+    message.value = {
+      type: 'success',
+      text: `Welcome back, Licean! Redirecting to campus navigation map...`,
+    }
+  }, 900)
 }
+
+
 </script>
 
 <template>
-  <div class="login-page">
-    <div class="login-card">
+  <div class="auth-card">
+    <!-- Center Branding Header -->
+    <div class="auth-header">
+      <CompassLogo :size="78" />
+      <h1 class="auth-title">Welcome Back Licean!</h1>
+      <p class="auth-subtitle">
+        Enter your student or faculty credentials to access campus navigation.
+      </p>
+    </div>
 
-      <!-- Compass Logo Placeholder -->
-      <div class="logo-wrap">
-        <svg
-          class="compass-icon"
-          viewBox="0 0 100 100"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-label="Compass logo"
-          role="img"
-        >
-          <!-- Outer ring -->
-          <circle cx="50" cy="50" r="46" fill="none" stroke="#6b1212" stroke-width="4" />
-          <!-- Inner ring -->
-          <circle cx="50" cy="50" r="6" fill="#6b1212" />
-          <!-- North needle (maroon) -->
-          <polygon points="50,12 44,50 50,44 56,50" fill="#6b1212" />
-          <!-- South needle (light maroon) -->
-          <polygon points="50,88 44,50 50,56 56,50" fill="#b94b4b" />
-          <!-- Cardinal markers -->
-          <text x="50" y="10" text-anchor="middle" font-size="8" font-family="'Orbitron', sans-serif" fill="#6b1212" font-weight="700">N</text>
-          <text x="50" y="97" text-anchor="middle" font-size="8" font-family="'Orbitron', sans-serif" fill="#6b7280">S</text>
-          <text x="96" y="53" text-anchor="middle" font-size="8" font-family="'Orbitron', sans-serif" fill="#6b7280">E</text>
-          <text x="4" y="53" text-anchor="middle" font-size="8" font-family="'Orbitron', sans-serif" fill="#6b7280">W</text>
-        </svg>
-      </div>
+    <!-- Alert Notification Message -->
+    <div
+      v-if="message"
+      :class="['alert', message.type === 'success' ? 'alert-success' : 'alert-error']"
+      role="alert"
+    >
+      <component :is="message.type === 'success' ? CheckCircle2 : AlertCircle" :size="18" />
+      <span>{{ message.text }}</span>
+    </div>
 
-      <!-- Heading -->
-      <h1 class="title">Welcome Back Licean!</h1>
-
-      <!-- Login Form -->
-      <form id="login-form" class="login-form" @submit.prevent="handleSubmit" novalidate>
-
-        <div class="form-group">
-          <label for="email-input">Email</label>
+    <!-- Login Form -->
+    <form id="login-form" class="auth-form" @submit.prevent="handleSubmit" novalidate>
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="email-input" class="form-label">
+          <span>Email</span>
+        </label>
+        <div class="input-wrapper">
+          <span class="input-icon-left">
+            <Mail :size="18" />
+          </span>
           <input
             id="email-input"
             v-model="email"
             type="email"
+            class="form-input has-left-icon"
             placeholder="you@liceo.edu.ph"
             autocomplete="email"
             required
           />
         </div>
+      </div>
 
-        <div class="form-group">
-          <label for="password-input">Password</label>
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password-input" class="form-label">
+          <span>Password</span>
+        </label>
+        <div class="input-wrapper">
+          <span class="input-icon-left">
+            <Lock :size="18" />
+          </span>
           <input
             id="password-input"
             v-model="password"
-            type="password"
+            :type="showPassword ? 'text' : 'password'"
+            class="form-input has-left-icon has-right-icon"
             placeholder="••••••••"
             autocomplete="current-password"
             required
           />
+          <button
+            type="button"
+            class="input-icon-right"
+            :aria-label="showPassword ? 'Hide password' : 'Show password'"
+            @click="showPassword = !showPassword"
+          >
+            <EyeOff v-if="showPassword" :size="18" />
+            <Eye v-else :size="18" />
+          </button>
         </div>
+      </div>
 
-        <button id="login-submit-btn" type="submit" class="btn-continue">
-          Continue
-        </button>
+      <!-- Remember Me & Forgot Password Row -->
+      <div class="form-extra-row">
+        <label class="checkbox-label">
+          <input v-model="rememberMe" type="checkbox" />
+          <span>Remember me</span>
+        </label>
+        <router-link
+          id="forgot-password-link"
+          to="/forgot-password"
+          class="inline-link forgot-link"
+        >
+          Forgot password?
+        </router-link>
+      </div>
 
-      </form>
+      <!-- Submit Button -->
+      <button
+        id="login-submit-btn"
+        type="submit"
+        class="btn btn-primary"
+        :disabled="isLoading"
+      >
+        <span v-if="isLoading" class="btn-spinner"></span>
+        <span v-else>Continue</span>
+        <ArrowRight v-if="!isLoading" :size="18" />
+      </button>
+    </form>
 
-      <!-- Sign up link -->
-      <p class="signup-text">
-        Don't have an account?
-        <router-link id="signup-link" to="/register" class="signup-link">Sign up</router-link>
-      </p>
-
+    <!-- Sign up Footer Link -->
+    <div class="auth-footer">
+      <span>Don't have an account?</span>
+      <router-link id="signup-link" to="/register" class="inline-link" style="margin-left: 6px;">
+        Sign up
+      </router-link>
     </div>
   </div>
 </template>
 
 <style scoped>
-.login-page {
-  height: 100%;
-  padding-top: 4rem;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  background-color: #ffffff;
-}
 
-.login-card {
-  width: 100%;
-  max-width: 600px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-}
 
-/* ── Logo ─────────────────────────────────────────────── */
-.logo-wrap {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background-color: #ffffff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  box-shadow: 0 4px 20px rgba(107, 18, 18, 0.12);
-  margin-bottom: 0;
-}
-
-.compass-icon {
-  width: 100%;
-  height: 100%;
-}
-
-/* ── Heading ──────────────────────────────────────────── */
-.title {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #111827;
-  text-align: center;
-  letter-spacing: -0.01em;
-  margin-bottom: 0;
-}
-
-/* ── Form ─────────────────────────────────────────────── */
-.login-form {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-label {
+.forgot-link {
   font-size: 0.82rem;
-  font-weight: 600;
-  color: #374151;
-  letter-spacing: 0.01em;
 }
 
-input {
-  width: 100%;
-  padding: 10px 16px;
-  background-color: #f3f4f6;
-  border: none;
-  border-radius: 20px;
-  font-size: 0.92rem;
-  color: #111827;
-  outline: none;
-  transition: box-shadow 0.2s ease, background-color 0.2s ease;
+.btn-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
 }
 
-input::placeholder {
-  color: #9ca3af;
-}
-
-input:focus {
-  background-color: #e9ecf1;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
-}
-
-/* ── Button ───────────────────────────────────────────── */
-.btn-continue {
-  width: 100%;
-  padding: 11px;
-  margin-top: 0.2rem;
-  background-color: #2563eb;
-  color: #ffffff;
-  font-size: 0.95rem;
-  font-weight: 600;
-  font-family: 'Inter', system-ui, sans-serif;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  letter-spacing: 0.02em;
-  transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
-}
-
-.btn-continue:hover {
-  background-color: #1d4ed8;
-  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
-}
-
-.btn-continue:active {
-  transform: scale(0.98);
-  background-color: #1e40af;
-}
-
-/* ── Sign up ──────────────────────────────────────────── */
-.signup-text {
-  font-size: 0.85rem;
-  color: #6b7280;
-  text-align: center;
-  margin-top: 0.1rem;
-}
-
-.signup-link {
-  color: #2563eb;
-  font-weight: 600;
-  text-decoration: none;
-  margin-left: 4px;
-  transition: color 0.15s ease;
-}
-
-.signup-link:hover {
-  color: #1d4ed8;
-  text-decoration: underline;
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
-
