@@ -1,170 +1,120 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import CompassLogo from '@/components/CompassLogo.vue'
-import { Mail, Lock, Eye, EyeOff, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-vue-next'
+import { useRouter } from 'vue-router'
 
-const email = ref<string>('')
-const password = ref<string>('')
-const rememberMe = ref<boolean>(true)
-const showPassword = ref<boolean>(false)
-const isLoading = ref<boolean>(false)
-const message = ref<{ type: 'success' | 'error'; text: string } | null>(null)
+const router = useRouter()
 
-function handleSubmit() {
+const email = ref('')
+const password = ref('')
+const showPassword = ref(false)
+
+function login() {
   if (!email.value || !password.value) {
-    message.value = {
-      type: 'error',
-      text: 'Please provide both your Liceo email and password.',
-    }
+    alert('Please enter your LDCU email and password.')
     return
   }
 
-  isLoading.value = true
-  message.value = null
+  if (!email.value.endsWith('@liceo.edu.ph')) {
+    alert('Please use your official LDCU email.')
+    return
+  }
 
-  setTimeout(() => {
-    isLoading.value = false
-    message.value = {
-      type: 'success',
-      text: `Welcome back, Licean! Redirecting to campus navigation map...`,
-    }
-  }, 900)
+  router.push('/home')
 }
-
-
 </script>
 
 <template>
-  <div class="auth-card">
-    <!-- Center Branding Header -->
+
+  <div class="auth-page">
+
     <div class="auth-header">
-      <CompassLogo :size="78" />
-      <h1 class="auth-title">Welcome Back Licean!</h1>
+
+      <button
+        class="back-button"
+        @click="router.push('/')"
+      >
+        ←
+      </button>
+
+      <div class="brand-small">
+        <div class="brand-icon">⌖</div>
+        <strong>LDCUNav</strong>
+      </div>
+
+    </div>
+
+
+    <div class="auth-content">
+
+      <h1>Welcome Back</h1>
+
       <p class="auth-subtitle">
-        Enter your student or faculty credentials to access campus navigation.
+        Log in using your LDCU account.
       </p>
-    </div>
 
-    <!-- Alert Notification Message -->
-    <div
-      v-if="message"
-      :class="['alert', message.type === 'success' ? 'alert-success' : 'alert-error']"
-      role="alert"
-    >
-      <component :is="message.type === 'success' ? CheckCircle2 : AlertCircle" :size="18" />
-      <span>{{ message.text }}</span>
-    </div>
 
-    <!-- Login Form -->
-    <form id="login-form" class="auth-form" @submit.prevent="handleSubmit" novalidate>
-      <!-- Email Field -->
-      <div class="form-group">
-        <label for="email-input" class="form-label">
-          <span>Email</span>
-        </label>
+      <form @submit.prevent="login">
+
+        <label>LDCU EMAIL</label>
+
         <div class="input-wrapper">
-          <span class="input-icon-left">
-            <Mail :size="18" />
-          </span>
+
+          <span>✉</span>
+
           <input
-            id="email-input"
             v-model="email"
             type="email"
-            class="form-input has-left-icon"
-            placeholder="you@liceo.edu.ph"
-            autocomplete="email"
-            required
+            placeholder="yourname@liceo.edu.ph"
           />
-        </div>
-      </div>
 
-      <!-- Password Field -->
-      <div class="form-group">
-        <label for="password-input" class="form-label">
-          <span>Password</span>
-        </label>
+        </div>
+
+
+        <label>PASSWORD</label>
+
         <div class="input-wrapper">
-          <span class="input-icon-left">
-            <Lock :size="18" />
-          </span>
-          <input
-            id="password-input"
-            v-model="password"
-            :type="showPassword ? 'text' : 'password'"
-            class="form-input has-left-icon has-right-icon"
-            placeholder="••••••••"
-            autocomplete="current-password"
-            required
-          />
-          <button
-            type="button"
-            class="input-icon-right"
-            :aria-label="showPassword ? 'Hide password' : 'Show password'"
-            @click="showPassword = !showPassword"
-          >
-            <EyeOff v-if="showPassword" :size="18" />
-            <Eye v-else :size="18" />
-          </button>
-        </div>
-      </div>
 
-      <!-- Remember Me & Forgot Password Row -->
-      <div class="form-extra-row">
-        <label class="checkbox-label">
-          <input v-model="rememberMe" type="checkbox" />
-          <span>Remember me</span>
-        </label>
-        <router-link
-          id="forgot-password-link"
-          to="/forgot-password"
-          class="inline-link forgot-link"
-        >
-          Forgot password?
-        </router-link>
-      </div>
+  <span>♙</span>
 
-      <!-- Submit Button -->
-      <button
-        id="login-submit-btn"
-        type="submit"
-        class="btn btn-primary"
-        :disabled="isLoading"
-      >
-        <span v-if="isLoading" class="btn-spinner"></span>
-        <span v-else>Continue</span>
-        <ArrowRight v-if="!isLoading" :size="18" />
-      </button>
-    </form>
+  <input
+    v-model="password"
+    :type="showPassword ? 'text' : 'password'"
+    placeholder="Enter your password"
+  />
 
-    <!-- Sign up Footer Link -->
-    <div class="auth-footer">
-      <span>Don't have an account?</span>
-      <router-link id="signup-link" to="/register" class="inline-link" style="margin-left: 6px;">
-        Sign up
-      </router-link>
+  <button
+    type="button"
+    class="password-toggle"
+    @click="showPassword = !showPassword"
+  >
+    {{ showPassword ? '◉' : '◌' }}
+  </button>
+
+</div>
+
+<RouterLink
+  to="/forgot-password"
+  class="forgot"
+>
+  Forgot Password?
+</RouterLink>
+
+<button class="primary-button">
+  Log In
+</button>
+
+      </form>
+
+
+      <p class="auth-footer">
+        Don't have an account?
+        <RouterLink to="/register">
+          Sign Up
+        </RouterLink>
+      </p>
+
     </div>
+
   </div>
+
 </template>
-
-<style scoped>
-
-
-.forgot-link {
-  font-size: 0.82rem;
-}
-
-.btn-spinner {
-  width: 18px;
-  height: 18px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #ffffff;
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-</style>
