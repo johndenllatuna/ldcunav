@@ -1,0 +1,97 @@
+// LDCUNav - Prisma schema (PostgreSQL)
+// Single source of truth for the ldcunav database.
+// The Laravel backend reads/writes this database through the Prisma client
+// generated from this schema (prisma/schema.prisma -> prisma migrate).
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// USERS
+// ---------------------------------------------------------------------------
+
+model User {
+  id           Int                  @id @default(autoincrement())
+  fullName     String
+  studentId    String               @unique
+  email        String               @unique
+  passwordHash String
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @default(now())
+
+  savedLocations SavedLocation[]
+  tokens         PersonalAccessToken[]
+
+  @@map("User")
+}
+
+// ---------------------------------------------------------------------------
+// CAMPUS LOCATIONS
+// ---------------------------------------------------------------------------
+
+model Location {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
+  slug        String  @unique
+  // Category drives frontend filters: Academic | Facilities | Offices |
+  // Services | Administrative
+  category    String
+  // Type is the display label shown in the UI, e.g. "Academic Building"
+  type        String
+  description String?
+  icon        String?
+  // mapOrder (1-4) positions a location on the decorative campus map
+  mapOrder    Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+  savedBy SavedLocation[]
+
+  @@index([category])
+  @@map("Location")
+}
+
+// ---------------------------------------------------------------------------
+// USER-SAVED LOCATIONS
+// ---------------------------------------------------------------------------
+
+model SavedLocation {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  locationId Int
+  createdAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, locationId])
+  @@index([userId])
+  @@map("SavedLocation")
+}
+
+// ---------------------------------------------------------------------------
+// API TOKENS (bearer auth for the Vue frontend)
+// ---------------------------------------------------------------------------
+
+model PersonalAccessToken {
+  id         Int       @id @default(autoincrement())
+  userId     Int
+  name       String
+  tokenHash  String    @unique
+  abilities  String    @default("[]")
+  lastUsedAt DateTime?
+  expiresAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("PersonalAccessToken")
+}
