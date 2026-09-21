@@ -25,12 +25,15 @@ jobs:
           cache-dependency-path: ldcunav-fe/package-lock.json
 
       - name: Install dependencies
+        working-directory: ldcunav-fe
         run: npm ci
 
       - name: Install Playwright browsers
+        working-directory: ldcunav-fe
         run: npx playwright install --with-deps
 
       - name: Run Playwright tests
+        working-directory: ldcunav-fe
         run: npx playwright test
 
       - uses: actions/upload-artifact@v4
