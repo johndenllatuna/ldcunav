@@ -1,5 +1,18 @@
-# Vue 3 + TypeScript + Vite
+# Group Name: LdcuNav
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## 👥 Group Members
+* **Member 1 (Leader):** Ashton Lactuan
+* **Member 2:** Johnden Llatuna
+* **Member 3:** Nikki Pacatang
+* **Member 4:** Christian Cabalde
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+## 📌 Project Description
+
+**LdcuNav** is a web-based campus navigation system designed for Liceo de Cagayan University. It aims to help students, faculty, staff, and visitors easily find buildings, rooms, offices, and other important locations within the campus through a centralized navigation platform.
+
+### 🛠️ Technology Stack
+
+- **Frontend:** Vue.js
+- **Backend:** Laravel
+- **Database:** PostgreSQL
+- **Database ORM:** Prisma
