@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import AppIcon from '../components/AppIcon.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -27,7 +28,7 @@ function openSearch() {
         class="map-back"
         @click="goBack"
       >
-        ←
+        <AppIcon name="arrow-left" />
       </button>
 
       <div>
@@ -62,6 +63,10 @@ function openSearch() {
           <span>Civic Center</span>
         </div>
 
+        <div class="map-building map-building-five">
+          <span>Engineering Building</span>
+        </div>
+
         <div class="map-pin-selected">
           <span>●</span>
         </div>
@@ -73,7 +78,7 @@ function openSearch() {
 
         <div class="selected-location-row">
           <div class="selected-location-icon">
-            📍
+            <AppIcon name="pinned" />
           </div>
 
           <div>
@@ -229,6 +234,14 @@ function openSearch() {
   height: 70px;
   bottom: 60px;
   right: 65px;
+}
+
+.map-building-five {
+  width: 145px;
+  height: 68px;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .map-pin-selected {

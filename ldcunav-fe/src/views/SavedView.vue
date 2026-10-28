@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import AppIcon from '../components/AppIcon.vue'
 
 const router = useRouter()
 
@@ -59,7 +60,7 @@ function removeLocation(locationName: string) {
             @click="openLocation(location.name)"
           >
             <div class="saved-pin">
-              📍
+              <AppIcon name="map-pins" />
             </div>
 
             <div class="saved-info">

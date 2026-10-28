@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import AppIcon from '../components/AppIcon.vue'
 
 const router = useRouter()
 
@@ -18,7 +19,7 @@ function goBack() {
         class="information-back"
         @click="goBack"
       >
-        ←
+        <AppIcon name="arrow-left" />
       </button>
 
       <div>

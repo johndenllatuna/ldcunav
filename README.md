@@ -310,6 +310,8 @@ All endpoints return standard envelopes: `{ success, message, data }` or `{ succ
 ## 📚 Detailed Documentation Links
 
 - 📖 [**Database Specification & Schema Reference** (`docs/DATABASE.md`)](docs/DATABASE.md)
+- 🧭 [**UI Wireframes & Screen Implementation** (`docs/UI-WIREFRAMES.md`)](docs/UI-WIREFRAMES.md)
+- 🧱 [**Codebase & Component Structure** (`docs/PROJECT-STRUCTURE.md`)](docs/PROJECT-STRUCTURE.md)
 - 🔌 [**REST API Documentation & Samples** (`docs/API.md`)](docs/API.md)
 - 🧪 [**Test Suite & Verification Guide** (`docs/TESTING.md`)](docs/TESTING.md)
 - 🚀 [**Production Deployment & Nginx Guide** (`docs/DEPLOYMENT.md`)](docs/DEPLOYMENT.md)

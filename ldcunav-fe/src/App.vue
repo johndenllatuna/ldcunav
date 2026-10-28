@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import AppIcon from './components/AppIcon.vue'
 
 const route = useRoute()
+const router = useRouter()
 
 const showNavigation = computed(() => {
   return ![
@@ -15,7 +17,7 @@ const showNavigation = computed(() => {
 
 <template>
 
-  <div class="app-shell">
+  <div class="app-shell" :class="{ 'auth-shell': !showNavigation }">
 
     <main class="page-container">
       <router-view />
@@ -28,13 +30,16 @@ const showNavigation = computed(() => {
       v-if="showNavigation"
       class="bottom-nav"
     >
+      <div class="sidebar-brand" aria-label="LDCUNav">
+        <span>LDCU</span><span>Nav</span>
+      </div>
 
       <RouterLink
         to="/home"
         class="nav-item"
       >
         <span class="nav-icon">
-          ⌂
+          <AppIcon name="home" />
         </span>
 
         <span>
@@ -48,7 +53,7 @@ const showNavigation = computed(() => {
         class="nav-item"
       >
         <span class="nav-icon">
-          ♧
+          <AppIcon name="map" />
         </span>
 
         <span>
@@ -62,7 +67,7 @@ const showNavigation = computed(() => {
         class="nav-item"
       >
         <span class="nav-icon">
-          ⌕
+          <AppIcon name="search" />
         </span>
 
         <span>
@@ -76,7 +81,7 @@ const showNavigation = computed(() => {
         class="nav-item"
       >
         <span class="nav-icon">
-          ☆
+          <AppIcon name="map-pins" />
         </span>
 
         <span>
@@ -90,13 +95,22 @@ const showNavigation = computed(() => {
         class="nav-item"
       >
         <span class="nav-icon">
-          ♙
+          <AppIcon name="user" />
         </span>
 
         <span>
           Profile
         </span>
       </RouterLink>
+
+      <button
+        class="sidebar-logout"
+        type="button"
+        @click="router.push('/login')"
+      >
+        <span class="nav-icon"><AppIcon name="logout" /></span>
+        <span>Log Out</span>
+      </button>
 
     </nav>
 

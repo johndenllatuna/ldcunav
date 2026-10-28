@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import AppIcon from '../components/AppIcon.vue'
 
 const router = useRouter()
 
@@ -13,7 +14,8 @@ const recentSearches = [
   'North Academic'
 ]
 
-const locations = [
+type LocationIcon = 'building-arch' | 'building-bank' | 'building-church' | 'salad'
+const locations: { name: string; type: string; icon: string }[] = [
   {
     name: 'West Academic Cluster',
     type: 'Academic Building',
@@ -35,6 +37,11 @@ const locations = [
     icon: '🎓'
   },
   {
+    name: 'Engineering Building',
+    type: 'Academic Building',
+    icon: '🏛️'
+  },
+  {
     name: 'Liceo Civic Center',
     type: 'Campus Facility',
     icon: '🏫'
@@ -43,8 +50,24 @@ const locations = [
     name: 'Rodolsa Hall',
     type: 'University Facility',
     icon: '🏢'
+  },
+  {
+    name: 'Campus Chapel',
+    type: 'Campus Facility',
+    icon: 'building-church'
+  },
+  {
+    name: 'Campus Canteen',
+    type: 'Dining Facility',
+    icon: 'salad'
   }
 ]
+
+function iconFor(location: (typeof locations)[number]): LocationIcon {
+  if (location.name.includes('Chapel')) return 'building-church'
+  if (location.name.includes('Canteen')) return 'salad'
+  return location.type === 'Academic Building' ? 'building-arch' : 'building-bank'
+}
 
 function goToSearch() {
   const query = searchQuery.value.trim()
@@ -160,7 +183,7 @@ function goToMap() {
           type="submit"
           aria-label="Search"
         >
-          ⌕
+          <AppIcon name="search" />
         </button>
 
         <div class="search-text">
@@ -246,7 +269,7 @@ function goToMap() {
             <!-- ICON -->
 
             <div class="location-icon">
-              {{ location.icon }}
+              <AppIcon :name="iconFor(location)" />
             </div>
 
 
