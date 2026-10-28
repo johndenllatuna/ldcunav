@@ -18,7 +18,7 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => array_values(array_filter([
-        env('FRONTEND_ORIGIN'),
+        env('FRONTEND_ORIGIN', 'http://localhost:5173'),
     ])),
 
     'allowed_origins_patterns' => [],

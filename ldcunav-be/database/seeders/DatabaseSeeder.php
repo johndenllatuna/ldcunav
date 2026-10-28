@@ -2,10 +2,21 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
+/**
+ * DatabaseSeeder
+ *
+ * Master orchestrator for LdcuNav database seeding.
+ * Executes seeders in dependency order:
+ * 1. LocationSeeder (populates campus locations)
+ * 2. UserSeeder (creates synthetic demo accounts with hashed passwords)
+ * 3. SavedLocationSeeder (creates bookmarks linking demo users to locations)
+ *
+ * All seeders interact with PostgreSQL through App\Prisma\PrismaClient and are
+ * safe to execute repeatedly without duplicating records or dropping existing data.
+ */
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
@@ -15,11 +26,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            LocationSeeder::class,
+            UserSeeder::class,
+            SavedLocationSeeder::class,
         ]);
     }
 }

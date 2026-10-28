@@ -292,18 +292,18 @@ class ModelQuery
         foreach ($clauses as $key => $value) {
             switch ($key) {
                 case 'AND':
-                    $sub = array_map(
-                        fn ($branch) => '('.$this->compileWhereGroup($branch, $params).')',
-                        array_values((array) $value)
-                    );
+                    $sub = [];
+                    foreach ((array) $value as $branch) {
+                        $sub[] = '('.$this->compileWhereGroup((array) $branch, $params).')';
+                    }
                     $parts[] = implode(' AND ', $sub);
                     break;
 
                 case 'OR':
-                    $sub = array_map(
-                        fn ($branch) => '('.$this->compileWhereGroup($branch, $params).')',
-                        array_values((array) $value)
-                    );
+                    $sub = [];
+                    foreach ((array) $value as $branch) {
+                        $sub[] = '('.$this->compileWhereGroup((array) $branch, $params).')';
+                    }
                     $parts[] = '('.(implode(' OR ', $sub)).')';
                     break;
 
@@ -333,11 +333,10 @@ class ModelQuery
 
         if (is_array($value)) {
             $parts = [];
-            $mode = null;
+            $mode = $value['mode'] ?? null;
 
             foreach ($value as $operator => $operand) {
                 if ($operator === 'mode') {
-                    $mode = $operand;
                     continue;
                 }
 
@@ -379,9 +378,9 @@ class ModelQuery
             'lte' => $column.' <= '.$this->bind($asText($operand), $params),
             'gt' => $column.' > '.$this->bind($asText($operand), $params),
             'gte' => $column.' >= '.$this->bind($asText($operand), $params),
-            'contains' => $this->column($column, $insensitive).' LIKE '.$this->bind('%'.$this->escapeLike($this->asString($asText($operand))).'%', $params).' ESCAPE \'\\\'',
-            'startsWith' => $this->column($column, $insensitive).' LIKE '.$this->bind($this->escapeLike($this->asString($asText($operand))).'%', $params).' ESCAPE \'\\\'',
-            'endsWith' => $this->column($column, $insensitive).' LIKE '.$this->bind('%'.$this->escapeLike($this->asString($asText($operand))), $params).' ESCAPE \'\\\'',
+            'contains' => $this->column($column, $insensitive).' LIKE '.$this->bind('%'.$this->escapeLike($insensitive ? mb_strtolower($this->asString($asText($operand))) : $this->asString($asText($operand))).'%', $params),
+            'startsWith' => $this->column($column, $insensitive).' LIKE '.$this->bind($this->escapeLike($insensitive ? mb_strtolower($this->asString($asText($operand))) : $this->asString($asText($operand))).'%', $params),
+            'endsWith' => $this->column($column, $insensitive).' LIKE '.$this->bind('%'.$this->escapeLike($insensitive ? mb_strtolower($this->asString($asText($operand))) : $this->asString($asText($operand))), $params),
             default => throw new InvalidArgumentException("Unsupported where operator: {$operator}"),
         };
     }
@@ -401,7 +400,10 @@ class ModelQuery
             return $not ? 'TRUE' : 'FALSE';
         }
 
-        $placeholders = array_map(fn ($value) => $this->bind($value, $params), $values);
+        $placeholders = [];
+        foreach ($values as $val) {
+            $placeholders[] = $this->bind($val, $params);
+        }
 
         return $column.($not ? ' NOT IN (' : ' IN (').implode(', ', $placeholders).')';
     }
