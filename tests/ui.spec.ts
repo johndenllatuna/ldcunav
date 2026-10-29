@@ -163,7 +163,7 @@ test.describe('UI Tests', () => {
 
     // Location cards
     const cards = page.locator('.location-card');
-    await expect(cards).toHaveCount(6);
+    await expect(cards).toHaveCount(9);
 
     // Map promo
     await expect(page.locator('.map-promo strong')).toHaveText('View Full Campus Map');

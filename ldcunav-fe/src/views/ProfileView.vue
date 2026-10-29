@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import AppIcon from '../components/AppIcon.vue'
 
 const router = useRouter()
 
@@ -67,7 +68,7 @@ function logout() {
         @click="goToAccountSettings"
       >
 
-        <span>⚙️</span>
+        <span><AppIcon name="settings" /></span>
 
         <span>
           Account Settings
@@ -87,7 +88,7 @@ function logout() {
         @click="goToPrivacy"
       >
 
-        <span>🔒</span>
+        <span><AppIcon name="lock" /></span>
 
         <span>
           Privacy
@@ -107,7 +108,7 @@ function logout() {
         @click="goToTerms"
       >
 
-        <span>📄</span>
+        <span><AppIcon name="terms" /></span>
 
         <span>
           Terms of Service

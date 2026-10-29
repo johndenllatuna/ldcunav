@@ -46,15 +46,15 @@ test.describe('Functionality Tests', () => {
     const toggle = page.locator('.password-toggle');
 
     await expect(passwordInput).toBeVisible();
-    await expect(toggle).toHaveText('◌');
+    await expect(toggle).toHaveAttribute('aria-label', 'Show password');
 
     await toggle.click();
     await expect(page.locator('input[type="text"]').last()).toBeVisible();
-    await expect(toggle).toHaveText('◉');
+    await expect(toggle).toHaveAttribute('aria-label', 'Hide password');
 
     await toggle.click();
     await expect(page.locator('input[type="password"]')).toBeVisible();
-    await expect(toggle).toHaveText('◌');
+    await expect(toggle).toHaveAttribute('aria-label', 'Show password');
   });
 
   // ── 4  Register success ───────────────────────────────
@@ -119,8 +119,8 @@ test.describe('Functionality Tests', () => {
   test('6 – Search input filters locations by text', async ({ page }) => {
     await page.goto('/search');
 
-    // All 6 visible
-    await expect(page.locator('.search-location-card')).toHaveCount(6);
+    // All 9 visible, including Engineering Building, Chapel, and Cafeteria
+    await expect(page.locator('.search-location-card')).toHaveCount(9);
 
     // Type "West"
     await page.fill('input[type="search"]', 'West');
@@ -141,22 +141,22 @@ test.describe('Functionality Tests', () => {
     await page.goto('/search');
 
     // All
-    await expect(page.locator('.search-location-card')).toHaveCount(6);
+    await expect(page.locator('.search-location-card')).toHaveCount(9);
 
-    // Academic → 4
+    // Academic → 5
     await page.locator('.category-button').filter({ hasText: 'Academic' }).click();
     await expect(page.locator('.category-button.active')).toHaveText('Academic');
-    await expect(page.locator('.search-location-card')).toHaveCount(4);
+    await expect(page.locator('.search-location-card')).toHaveCount(5);
 
-    // Facilities → 2
+    // Facilities → 4
     await page.locator('.category-button').filter({ hasText: 'Facilities' }).click();
     await expect(page.locator('.category-button.active')).toHaveText('Facilities');
-    await expect(page.locator('.search-location-card')).toHaveCount(2);
+    await expect(page.locator('.search-location-card')).toHaveCount(4);
 
-    // Back to All → 6
+    // Back to All → 9
     await page.locator('.category-button').filter({ hasText: /^All$/ }).click();
     await expect(page.locator('.category-button.active')).toHaveText('All');
-    await expect(page.locator('.search-location-card')).toHaveCount(6);
+    await expect(page.locator('.search-location-card')).toHaveCount(9);
   });
 
   // ── 8  Saved locations removal ────────────────────────

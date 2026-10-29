@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import AppIcon from '../components/AppIcon.vue'
 
 const router = useRouter()
 
@@ -29,16 +30,9 @@ function login() {
 
     <div class="auth-header">
 
-      <button
-        class="back-button"
-        @click="router.push('/')"
-      >
-        ←
-      </button>
-
       <div class="brand-small">
         <div class="brand-icon">⌖</div>
-        <strong>LDCUNav</strong>
+        <strong><span>LDCU</span><span>Nav</span></strong>
       </div>
 
     </div>
@@ -74,7 +68,7 @@ function login() {
 
         <div class="input-wrapper">
 
-  <span>♙</span>
+  <span><AppIcon name="lock" /></span>
 
   <input
     v-model="password"
@@ -85,9 +79,11 @@ function login() {
   <button
     type="button"
     class="password-toggle"
+    :aria-label="showPassword ? 'Hide password' : 'Show password'"
+    :aria-pressed="showPassword"
     @click="showPassword = !showPassword"
   >
-    {{ showPassword ? '◉' : '◌' }}
+    <AppIcon name="eye" />
   </button>
 
 </div>

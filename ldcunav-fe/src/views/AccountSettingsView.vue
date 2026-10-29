@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import AppIcon from '../components/AppIcon.vue'
 
 const router = useRouter()
 
@@ -47,7 +48,7 @@ function changePassword() {
         aria-label="Back to profile"
         @click="goBack"
       >
-        ←
+        <AppIcon name="arrow-left" />
       </button>
 
       <div>
@@ -152,7 +153,7 @@ function changePassword() {
         >
 
           <span>
-            🔑
+            <AppIcon name="key" />
           </span>
 
           <span>

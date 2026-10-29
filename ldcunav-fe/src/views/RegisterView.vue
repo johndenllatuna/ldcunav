@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import AppIcon from '../components/AppIcon.vue'
 
 const router = useRouter()
 
@@ -60,12 +61,12 @@ function register() {
         class="back-button"
         @click="router.push('/login')"
       >
-        ←
+        <AppIcon name="arrow-left" />
       </button>
 
       <div class="brand-small">
         <div class="brand-icon">⌖</div>
-        <strong>LDCUNav</strong>
+        <strong><span>LDCU</span><span>Nav</span></strong>
       </div>
 
     </div>
@@ -81,7 +82,8 @@ function register() {
 
 
       <div class="info-box">
-        ℹ️ Please use your official LDCU email address to register.
+        <AppIcon name="info-circle" />
+        <span>Please use your official LDCU email address to register.</span>
       </div>
 
 

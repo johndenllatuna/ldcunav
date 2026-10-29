@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import AppIcon from '../components/AppIcon.vue'
 
 interface CampusLocation {
   name: string
@@ -7,6 +9,8 @@ interface CampusLocation {
   description: string
   icon: string
 }
+
+type LocationIcon = 'building-arch' | 'building-bank' | 'building-church' | 'salad'
 
 const locations: CampusLocation[] = [
   {
@@ -38,6 +42,12 @@ const locations: CampusLocation[] = [
     icon: '🏛️'
   },
   {
+    name: 'Engineering Building',
+    category: 'Academic Building',
+    description: 'Dedicated academic building for engineering programs, classrooms, and laboratories.',
+    icon: '🏛️'
+  },
+  {
     name: 'Liceo Civic Center',
     category: 'Campus Facility',
     description:
@@ -50,10 +60,23 @@ const locations: CampusLocation[] = [
     description:
       'Multi-purpose hall used for seminars, conferences, and...',
     icon: '🏢'
+  },
+  {
+    name: 'Campus Chapel',
+    category: 'Campus Facility',
+    description: 'A quiet place for university liturgies, reflection, and prayer.',
+    icon: '⛪'
+  },
+  {
+    name: 'Campus Canteen',
+    category: 'Campus Facility',
+    description: 'Campus dining with meal kiosks, refreshments, and student seating.',
+    icon: '🍽️'
   }
 ]
 
 const activeCategory = ref('All')
+const router = useRouter()
 
 const categories = [
   'All',
@@ -61,6 +84,12 @@ const categories = [
   'Facilities',
   'Administrative'
 ]
+
+function iconFor(location: CampusLocation): LocationIcon {
+  if (location.name.includes('Chapel')) return 'building-church'
+  if (location.name.includes('Canteen')) return 'salad'
+  return location.category.includes('Academic') ? 'building-arch' : 'building-bank'
+}
 
 const filteredLocations = computed(() => {
   if (activeCategory.value === 'All') {
@@ -85,7 +114,7 @@ const filteredLocations = computed(() => {
 })
 
 function viewMap(location: CampusLocation) {
-  console.log(`Opening map for ${location.name}`)
+  router.push({ path: '/map', query: { location: location.name } })
 }
 </script>
 
@@ -143,7 +172,7 @@ function viewMap(location: CampusLocation) {
           <!-- ICON -->
 
           <div class="explore-icon">
-            {{ location.icon }}
+            <AppIcon :name="iconFor(location)" />
           </div>
 
 

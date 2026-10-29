@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import AppIcon from '../components/AppIcon.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -65,7 +66,7 @@ function goBack() {
         aria-label="Go back"
         @click="goBack"
       >
-        ←
+        <AppIcon name="arrow-left" />
       </button>
 
 
@@ -75,9 +76,7 @@ function goBack() {
           ⌖
         </div>
 
-        <strong>
-          LDCUNav
-        </strong>
+        <strong><span>LDCU</span><span>Nav</span></strong>
 
       </div>
 

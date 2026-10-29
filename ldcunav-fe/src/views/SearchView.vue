@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import AppIcon from '../components/AppIcon.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -32,6 +33,11 @@ const locations = [
     category: 'Academic'
   },
   {
+    name: 'Engineering Building',
+    type: 'Academic Building',
+    category: 'Academic'
+  },
+  {
     name: 'Liceo Civic Center',
     type: 'Campus Facility',
     category: 'Facilities'
@@ -39,6 +45,16 @@ const locations = [
   {
     name: 'Rodolsa Hall',
     type: 'University Facility',
+    category: 'Facilities'
+  },
+  {
+    name: 'Campus Chapel',
+    type: 'Spiritual Center',
+    category: 'Facilities'
+  },
+  {
+    name: 'Campus Canteen',
+    type: 'Dining Facility',
     category: 'Facilities'
   }
 ]
@@ -94,7 +110,7 @@ function updateSearch() {
 
       <!-- SEARCH BAR -->
       <form class="search-box" @submit.prevent="updateSearch">
-        <span class="search-icon">⌕</span>
+        <span class="search-icon"><AppIcon name="search" /></span>
 
         <input
           v-model="searchQuery"
@@ -132,7 +148,7 @@ function updateSearch() {
             @click="openLocation(location.name)"
           >
             <div class="location-pin">
-              📍
+              <AppIcon name="pinned" />
             </div>
 
             <div class="location-info">
